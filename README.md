@@ -44,6 +44,7 @@ mkdir -p ~/.local/bin && mkdir -p ~/.vim/spell \
   && ln -s ~/dotfiles/.profile ~/.profile \
   && ln -s ~/dotfiles/.tmux.conf ~/.tmux.conf \
   && ln -s ~/dotfiles/.vimrc ~/.vimrc \
+  && ln -s ~/dotfiles/.pureline ~/.pureline \
   && ln -s ~/dotfiles/.vim/spell/en.utf-8.add ~/.vim/spell/en.utf-8.add \
   && ln -s ~/dotfiles/.local/bin/update-os ~/.local/bin/update-os \
   && sudo ln -s ~/dotfiles/etc/wsl.conf /etc/wsl.conf
@@ -70,6 +71,10 @@ vim .
 tmux
 `I
 ```
+
+#### Install powerline
+git clone https://github.com/chris-marsh/pureline.git ~/pureline
+
 
 #### Optionally confirm that a few things work after closing and re-opening your terminal
 
