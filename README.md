@@ -29,7 +29,7 @@ git clone https://github.com/carlospeix/dotfiles ~/dotfiles
 # then adjust the ln -s symlink source (left side) to where you cloned it.
 #
 # NOTE: The last one is WSL 1 / 2 specific. Don't do it on native Linux / MacOS.
-mkdir -p ~/.local/bin && mkdir -p ~/.vim/spell \
+mkdir -p ~/.local/bin && mkdir -p ~/.vim/spell && mkdir ~/.vim/colors \
   && ln -s ~/dotfiles/.aliases ~/.aliases \
   && ln -s ~/dotfiles/.bashrc ~/.bashrc \
   && ln -s ~/dotfiles/.gitconfig ~/.gitconfig \
