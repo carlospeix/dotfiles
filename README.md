@@ -1,6 +1,6 @@
 # dotfiles
 
-Clonado y modificado del repositorio de [Nick Janetakis](https://github.com/nickjj/dotfiles)
+Based on [Nick Janetakis](https://github.com/nickjj/dotfiles) dorfiles repo
 
 ### Documentation
 
@@ -15,14 +15,7 @@ On the windows host you should install WSL 2 and Docker Desktop for Windows, the
 Basic tools
 
 ```sh
-sudo apt-get update && sudo apt-get install -y \
-  curl \
-  git \
-  gpg \
-  htop \
-  rsync \
-  tmux \
-  unzip
+sudo apt-get update && sudo apt-get install -y curl git gpg htop rsync tmux zip unzip
 ```
 
 #### Install these dotfiles and various tools on your system
@@ -39,7 +32,6 @@ git clone https://github.com/carlospeix/dotfiles ~/dotfiles
 mkdir -p ~/.local/bin && mkdir -p ~/.vim/spell \
   && ln -s ~/dotfiles/.aliases ~/.aliases \
   && ln -s ~/dotfiles/.bashrc ~/.bashrc \
-  && ln -s ~/dotfiles/.gemrc ~/.gemrc \
   && ln -s ~/dotfiles/.gitconfig ~/.gitconfig \
   && ln -s ~/dotfiles/.profile ~/.profile \
   && ln -s ~/dotfiles/.tmux.conf ~/.tmux.conf \
