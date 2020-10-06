@@ -25,6 +25,9 @@ sudo apt-get update && sudo apt-get install -y curl git gpg htop rsync tmux zip 
 # this anywhere you want, but remember where you've cloned things to.
 git clone https://github.com/carlospeix/dotfiles ~/dotfiles
 
+# Copy WSL configuration
+cp c/Users/Carlos/.wslconfig /c/Users/Carlos/
+
 # Create symlinks to various dotfiles. If you didn't clone it to ~/dotfiles
 # then adjust the ln -s symlink source (left side) to where you cloned it.
 #
