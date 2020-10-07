@@ -46,9 +46,11 @@ weather () {
     curl https://wttr.in/"${1}"
 }
 
+alias dcu="docker-compose up"
+
 alias dew="docker-compose exec web"
 
-alias dpsql="docker-compose exec postgres psql"
+alias dpsql="docker-compose exec db psql"
 
 alias drun='docker run --rm -it -v "${PWD}":/app'
 
