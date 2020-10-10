@@ -16,7 +16,7 @@
             "colorScheme" : "One Half Dark",
             "cursorColor" : "#6de6f5",
             "cursorShape" : "vintage",
-            "fontFace" : "Consolas",
+            "fontFace" : "Consolas", // "Cascadia Code PL"
             "fontSize" : 9,
             "padding" : "1, 1, 1, 1",
             "scrollbarState": "hidden"
