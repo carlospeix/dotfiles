@@ -15,7 +15,8 @@ On the windows host you should install WSL 2 and Docker Desktop for Windows, the
 Basic tools
 
 ```sh
-sudo apt-get update && sudo apt-get install -y curl git gpg htop rsync tmux zip unzip rar unrar ctags
+sudo apt-get update -y
+sudo apt-get install -y curl git gpg htop rsync tmux zip unzip rar unrar ctags build-essential libssl-dev libreadline-dev zlib1g-dev
 ```
 
 #### Install these dotfiles and various tools on your system
@@ -52,6 +53,16 @@ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
 # Install FZF (fuzzy finder on the terminal and used by a Vim plugin).
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install
+
+# Install ASDF (version manager which I use for linters).
+git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.8.0
+
+# Then add to the .bashrc and source it
+# . $HOME/.asdf/asdf.sh
+
+asdf plugin-add ruby
+asdt install ruby 2.7.2
+asdt global ruby 2.7.2
 
 #### Install plugins for Vim and tmux
 

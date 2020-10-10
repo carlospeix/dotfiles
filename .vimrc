@@ -50,3 +50,15 @@ autocmd FileType netrw set nolist
 set hlsearch
 set incsearch
 
+" Set specific linters
+let g:ale_linters = { 'ruby': ['rubocop'] }
+
+" Only run linters named in ale_linters settings.
+let g:ale_linters_explicit = 1 
+
+" Disable ALE auto highlights
+let g:ale_set_highlights = 0
+let g:ale_warn_about_trailing_whitespace = 1
+let g:ale_ruby_rubocop_options = '--lint'
+"set signcolumn=number
+
