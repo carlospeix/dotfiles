@@ -15,7 +15,7 @@ On the windows host you should install WSL 2 and Docker Desktop for Windows, the
 Basic tools
 
 ```sh
-sudo apt-get update && sudo apt-get install -y curl git gpg htop rsync tmux zip unzip rar unrar
+sudo apt-get update && sudo apt-get install -y curl git gpg htop rsync tmux zip unzip rar unrar ctags
 ```
 
 #### Install these dotfiles and various tools on your system
