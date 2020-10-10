@@ -38,8 +38,8 @@ mkdir -p ~/.local/bin && mkdir -p ~/.vim/spell && mkdir ~/.vim/colors \
   && ln -s ~/dotfiles/.gitconfig ~/.gitconfig \
   && ln -s ~/dotfiles/.profile ~/.profile \
   && ln -s ~/dotfiles/.tmux.conf ~/.tmux.conf \
+  && ln -s ~/dotfiles/.pureline.conf ~/.pureline.conf \
   && ln -s ~/dotfiles/.vimrc ~/.vimrc \
-  && ln -s ~/dotfiles/.pureline ~/.pureline \
   && ln -s ~/dotfiles/.vim/spell/en.utf-8.add ~/.vim/spell/en.utf-8.add \
   && ln -s ~/dotfiles/.local/bin/update-os ~/.local/bin/update-os \
   && sudo ln -s ~/dotfiles/etc/wsl.conf /etc/wsl.conf

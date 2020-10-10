@@ -28,6 +28,8 @@ shopt -s checkwinsize
 [ -f "${HOME}/.aliases" ] && source "${HOME}/.aliases"
 [ -f "${HOME}/.aliases.local" ] && source "${HOME}/.aliases.local"
 
+#source ~/pureline/pureline ~/.pureline.conf
+
 # Determine git branch.
 parse_git_branch() {
     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
