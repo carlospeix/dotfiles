@@ -70,3 +70,4 @@ if grep -qE "(Microsoft|WSL)" /proc/version &>/dev/null; then
     export DISPLAY=:0
 fi
 
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
