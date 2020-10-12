@@ -28,15 +28,15 @@ shopt -s checkwinsize
 [ -f "${HOME}/.aliases" ] && source "${HOME}/.aliases"
 [ -f "${HOME}/.aliases.local" ] && source "${HOME}/.aliases.local"
 
-source ~/pureline/pureline ~/.pureline.conf
+#source ~/pureline/pureline ~/.pureline.conf
 
 # Determine git branch.
-#parse_git_branch() {
-#    git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
-#}
+parse_git_branch() {
+    git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
+}
 
 # Set a non-distracting prompt.
-#PS1='\[[01;32m\]\u@\h\[[00m\]:\[[01;34m\]\w\[[00m\] \[[01;33m\]$(parse_git_branch)\[[00m\]\$ '
+PS1='\[[01;32m\]\u@\h\[[00m\]:\[[01;34m\]\w\[[00m\] \[[01;33m\]$(parse_git_branch)\[[00m\]\$ '
 
 # If it's an xterm compatible terminal, set the title to user@host: dir.
 case "${TERM}" in
