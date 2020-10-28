@@ -16,7 +16,7 @@ Basic tools
 
 ```sh
 sudo apt-get update -y
-sudo apt-get install -y curl git gpg htop rsync tmux zip unzip rar unrar ctags build-essential libssl-dev libreadline-dev zlib1g-dev
+sudo apt-get install -y curl git gpg htop rsync tmux zip unzip rar unrar ctags ripgrep build-essential libssl-dev libreadline-dev zlib1g-dev
 ```
 
 #### Install these dotfiles and various tools on your system
