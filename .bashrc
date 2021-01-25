@@ -73,3 +73,6 @@ fi
 . $HOME/.asdf/asdf.sh
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+service docker status > /dev/null || sudo service docker start
+

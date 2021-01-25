@@ -93,6 +93,15 @@ docker info
 docker-compose --version
 ```
 
+#### If you are using docker installed on WSL, you need to start it in .bashrc so you need to define a sudoer
+```
+sudo visudo
+
+and add the following line under #includedir /etc/sudoers.d
+
+carlos ALL=(ALL:ALL) NOPASSWD: /usr/sbin/service
+```
+
 Before you start customizing certain config files, take a look at the
 [personalization question in the FAQ](#how-to-personalize-these-dotfiles).
 
