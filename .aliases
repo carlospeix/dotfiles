@@ -48,7 +48,7 @@ weather () {
 
 alias dcu="docker-compose up"
 
-alias dcb="docker-compose build --build-arg uid=`id -u` --build-arg gid=`id -g`"
+alias dcb="docker-compose build --build-arg UID=`id -u` --build-arg GID=`id -g`"
 
 alias dew="docker-compose exec web"
 
