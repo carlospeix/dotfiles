@@ -61,8 +61,8 @@ git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.8.0
 # . $HOME/.asdf/asdf.sh
 
 asdf plugin-add ruby
-asdt install ruby 2.7.2
-asdt global ruby 2.7.2
+asdf install ruby 2.7.2
+asdf global ruby 2.7.2
 
 #### Install plugins for Vim and tmux
 
