@@ -52,9 +52,9 @@ alias dcb="docker-compose build --build-arg UID=`id -u` --build-arg GID=`id -g`"
 
 alias dew="docker-compose exec web"
 
-alias dpsql="docker-compose exec db psql"
+alias dpsql="docker-compose exec db psql -U postgres"
 
-alias drun='docker run --rm -it -v "${PWD}":/app'
+alias drun='docker run --rm -it -v "${PWD}":/opt/app'
 
 alias diff="diff --color -u"
 
