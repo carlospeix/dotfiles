@@ -47,13 +47,21 @@ weather () {
 }
 
 timer() {
-    seconds=%1
-    date1=$((`date +%s` + $1));
-    while [ "$date1" -ge `date +%s` ]; do
-        echo -ne "$(date -u --date @$(($date1 - `date +%s` )) +' %M:%S ')\r";
-        echo -ne "$(date -u --date @$(($date1 - `date +%s` )) +' %M:%S ')\r" > /mnt/c/Program\ Files/Snaz/TextFiles/ChronoDown.txt;
-        sleep 0.1
-    done
+    seconds=$1;
+    if [ $seconds -eq 0 ]; then
+        echo -ne "" > /mnt/c/Program\ Files/Snaz/TextFiles/ChronoDown.txt;
+    else
+        date1=$((`date +%s` + $seconds));
+        while [ "$date1" -ge `date +%s` ]; do
+            output="$(date -u --date @$(($date1 - `date +%s` )) +'%M:%S')\r";
+            echo -ne " $output \r";
+            echo -ne " $output \r" > /mnt/c/Program\ Files/Snaz/TextFiles/ChronoDown.txt;
+            sleep 0.1
+        done
+        if [[ "$output" =~ "59:59" ]]; then
+            echo -ne " 00:00 " > /mnt/c/Program\ Files/Snaz/TextFiles/ChronoDown.txt;
+        fi
+    fi
 }
 
 alias dcu="docker-compose up"
