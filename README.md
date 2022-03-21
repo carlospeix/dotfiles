@@ -128,4 +128,3 @@ goes into the details.
 Also, you should reboot to activate your `/etc/wsl.conf` file (symlinked
 earlier). That will be necessary if you want to access your mounted drives at
 `/c` or `/d` instead of `/mnt/c` or `/mnt/d`.
-

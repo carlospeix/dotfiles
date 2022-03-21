@@ -74,7 +74,7 @@ fi
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
+service cron status > /dev/null || sudo service cron start
 service docker status > /dev/null || sudo service docker start
 
 for i in /etc/update-motd.d/*; do if [ "$i" != "/etc/update-motd.d/98-fsck-at-reboot" ]; then $i; fi; done
-
