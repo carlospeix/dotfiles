@@ -43,9 +43,14 @@ set wildmenu
 " netrw configuration
 let g:netrw_liststyle = 3
 let g:netrw_banner = 0
-let g:netrw_winsize = 30
+let g:netrw_winsize = 22
+let g:netrw_browse_split = 4
 "let g:netrw_list_hide = '\(^\|\s\s\)\zs\.\S\+,\(^\|\s\s\)ntuser\.\S\+'
-autocmd FileType netrw set nolist
+"autocmd FileType netrw set nolist
+augroup ProjectDrawer
+  autocmd!
+  autocmd VimEnter * :Vexplore
+augroup END
 
 " Search, hlserach, etc
 set hlsearch
