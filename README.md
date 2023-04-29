@@ -1,6 +1,6 @@
 # dotfiles
 
-Based on [Nick Janetakis](https://github.com/nickjj/dotfiles) dorfiles repo
+Based on [Nick Janetakis](https://github.com/nickjj/dotfiles) dotfiles repository
 
 ### Documentation
 
@@ -10,13 +10,28 @@ This configuration is designed an tested on a Windows 10 Pro host running WSL2 f
 
 On the windows host you should install WSL 2 and Docker Desktop for Windows, then install Ubuntu in WSL 2
 
-#### Ubuntu 20.04 LTS
+#### Ubuntu 22.04 LTS
 
 Basic tools
 
 ```sh
 sudo apt-get update -y
 sudo apt-get install -y curl git gpg htop rsync tmux zip unzip rar unrar ctags ripgrep build-essential libssl-dev libreadline-dev zlib1g-dev
+```
+
+#### [GitHub cli](https://github.com/cli/cli/blob/trunk/docs/install_linux.md)
+
+```sh
+curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+  && sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+  && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+  && sudo apt update \
+  && sudo apt install gh -y
+```
+
+#### [Heroku cli](https://devcenter.heroku.com/articles/heroku-cli)
+```sh
+curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
 ```
 
 #### Install these dotfiles and various tools on your system
@@ -42,6 +57,7 @@ mkdir -p ~/.local/bin && mkdir -p ~/.vim/spell && mkdir ~/.vim/colors \
   && ln -s ~/dotfiles/.pureline.conf ~/.pureline.conf \
   && ln -s ~/dotfiles/.vimrc ~/.vimrc \
   && ln -s ~/dotfiles/.vim/spell/en.utf-8.add ~/.vim/spell/en.utf-8.add \
+  && ln -s ~/dotfiles/.vim/colors/default-light.vim ~/.vim/colors/default-light.vim \
   && ln -s ~/dotfiles/.local/bin/update-os ~/.local/bin/update-os \
   && ln -s ~/dotfiles/.local/bin/start-services ~/.local/bin/start-services \
   && sudo ln -s ~/dotfiles/etc/wsl.conf /etc/wsl.conf
@@ -56,7 +72,7 @@ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install
 
 # Install ASDF (version manager which I use for linters).
-git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.8.0
+git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.11.0
 
 # Then add to the .bashrc and source it
 # . $HOME/.asdf/asdf.sh
