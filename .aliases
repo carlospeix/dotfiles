@@ -64,13 +64,13 @@ timer() {
     fi
 }
 
-alias dcu="docker-compose up"
+alias dcu="docker compose up"
 
-alias dcb="docker-compose build --build-arg UID=`id -u` --build-arg GID=`id -g`"
+alias dcb="docker compose build --build-arg UID=`id -u` --build-arg GID=`id -g`"
 
-alias dew="docker-compose exec web"
+alias dew="docker compose exec web"
 
-alias dpsql="docker-compose exec db psql -U postgres"
+alias dpsql="docker compose exec db psql -U postgres"
 
 alias drun='docker run --rm -it -v "${PWD}":/opt/app'
 
