@@ -1,4 +1,0 @@
-#!/bin/bash
-
-service cron status > /dev/null || sudo service cron start
-service docker status > /dev/null || sudo service docker start

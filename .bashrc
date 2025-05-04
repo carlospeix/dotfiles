@@ -28,8 +28,6 @@ shopt -s checkwinsize
 [ -f "${HOME}/.aliases" ] && source "${HOME}/.aliases"
 [ -f "${HOME}/.aliases.local" ] && source "${HOME}/.aliases.local"
 
-#source ~/pureline/pureline ~/.pureline.conf
-
 # Determine git branch.
 parse_git_branch() {
     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
@@ -50,9 +48,9 @@ esac
 # Enable a better reverse search experience.
 #   Requires: https://github.com/junegunn/fzf (to use fzf in general)
 #   Requires: https://github.com/BurntSushi/ripgrep (for using rg below)
-export FZF_DEFAULT_COMMAND="rg --files --hidden --follow --glob '!.git'"
-export FZF_DEFAULT_OPTS="-m --height 50% --border --color=dark"
-[ -f "${HOME}/.fzf.bash" ] && source "${HOME}/.fzf.bash"
+#export FZF_DEFAULT_COMMAND="rg --files --hidden --follow --glob '!.git'"
+#export FZF_DEFAULT_OPTS="-m --height 50% --border --color=dark"
+#[ -f "${HOME}/.fzf.bash" ] && source "${HOME}/.fzf.bash"
 
 # WSL 2 specific settings.
 if grep -q "microsoft" /proc/version &>/dev/null; then
@@ -70,11 +68,10 @@ if grep -qE "(Microsoft|WSL)" /proc/version &>/dev/null; then
     export DISPLAY=:0
 fi
 
-. $HOME/.asdf/asdf.sh
+#. $HOME/.asdf/asdf.sh
 
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+#[ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 service cron status > /dev/null || sudo service cron start
-service docker status > /dev/null || sudo service docker start
 
 for i in /etc/update-motd.d/*; do if [ "$i" != "/etc/update-motd.d/98-fsck-at-reboot" ]; then $i; fi; done
