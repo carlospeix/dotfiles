@@ -76,3 +76,9 @@ service cron status > /dev/null || sudo service cron start
 # service docker status > /dev/null || sudo service docker start
 
 for i in /etc/update-motd.d/*; do if [ "$i" != "/etc/update-motd.d/98-fsck-at-reboot" ]; then $i; fi; done
+
+alias fd=fdfind
+alias update-os=./dotfiles/.local/bin/update-os
+
+export PATH=~/.npm-global/bin:$PATH
+
