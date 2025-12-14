@@ -78,7 +78,29 @@ service cron status > /dev/null || sudo service cron start
 for i in /etc/update-motd.d/*; do if [ "$i" != "/etc/update-motd.d/98-fsck-at-reboot" ]; then $i; fi; done
 
 alias fd=fdfind
-alias update-os=./dotfiles/.local/bin/update-os
+alias update-os=~/dotfiles/.local/bin/update-os
 
 export PATH=~/.npm-global/bin:$PATH
+
+# Check if agent is running and socket file exists
+if [ -z "$SSH_AUTH_SOCK" ] || [ ! -S "$SSH_AUTH_SOCK" ]; then
+  # Try to find existing agent
+  if [ -f ~/.ssh-agent-env ]; then
+    source ~/.ssh-agent-env > /dev/null
+  fi
+  
+  # Test if agent is actually responsive
+  if ! ssh-add -l > /dev/null 2>&1; then
+    # Start new agent and save environment
+    eval "$(ssh-agent -s)"
+    echo "export SSH_AUTH_SOCK=$SSH_AUTH_SOCK" > ~/.ssh-agent-env
+    echo "export SSH_AGENT_PID=$SSH_AGENT_PID" >> ~/.ssh-agent-env
+    echo "SSH agent started."
+  else
+    echo "SSH agent already running."
+  fi
+else
+  echo "SSH agent already running."
+fi
+ssh-add ~/.ssh/hetzner_id_ed25519
 
