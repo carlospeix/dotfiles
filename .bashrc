@@ -34,7 +34,7 @@ parse_git_branch() {
 }
 
 # Set a non-distracting prompt.
-PS1='\[[01;32m\]\u@\h\[[00m\]:\[[01;34m\]\w\[[00m\] \[[01;33m\]$(parse_git_branch)\[[00m\]\n\$ '
+PS1='\[\]\u@\h\[\]:\[\]\w\[\] \[\]$(parse_git_branch)\[\]\n\$ '
 
 # If it's an xterm compatible terminal, set the title to user@host: dir.
 case "${TERM}" in
@@ -88,7 +88,7 @@ if [ -z "$SSH_AUTH_SOCK" ] || [ ! -S "$SSH_AUTH_SOCK" ]; then
   if [ -f ~/.ssh-agent-env ]; then
     source ~/.ssh-agent-env > /dev/null
   fi
-  
+
   # Test if agent is actually responsive
   if ! ssh-add -l > /dev/null 2>&1; then
     # Start new agent and save environment
@@ -103,4 +103,8 @@ else
   echo "SSH agent already running."
 fi
 ssh-add ~/.ssh/hetzner_id_ed25519
+
+if [ -f ~/.bashrc_private ]; then
+    source ~/.bashrc_private
+fi
 
