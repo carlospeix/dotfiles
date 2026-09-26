@@ -8,7 +8,7 @@ This configuration is designed an tested on a Windows 11 Pro host running WSL2 f
 
 #### On the windows host
 
-On the windows host you should install WSL 2 and Docker Desktop for Windows, then install Ubuntu in WSL 2
+On the windows host you should install WSL 2, then install Debian in WSL 2 (Docker se instala nativo, ver abajo)
 
 #### Ubuntu 22.04 LTS
 
@@ -80,3 +80,13 @@ goes into the details.
 Also, you should reboot to activate your `/etc/wsl.conf` file (symlinked
 earlier). That will be necessary if you want to access your mounted drives at
 `/c` or `/d` instead of `/mnt/c` or `/mnt/d`.
+
+## Docker (nativo en Debian)
+
+Docker Engine se corre nativo en Debian (con systemd), no Docker Desktop. Ver:
+
+- `docker/install-docker-debian.sh` — instala docker-ce + compose + buildx.
+- `wsl/wsl.conf` + `wsl/apply.sh` — activa systemd.
+- `docker/local-network.sh` — red externa compartida.
+- `docker/pg-restore.sh` — restaura dumps de Postgres en volúmenes nombrados.
+- `docs/docker-migration.md` — procedimiento completo (dump/restore de crm y fugazzeta, auth).
