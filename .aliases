@@ -11,31 +11,14 @@ alias ll="ls -alF"
 alias la="ls -A"
 alias l="ls -CF"
 
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
-
 vdiff () {
     if [ "${#}" -ne 2 ] ; then
         echo "vdiff requires two arguments"
-        echo "  comparing dirs:  vdiff dir_a dir_b"
-        echo "  comparing files: vdiff file_a file_b"
+        echo "  vdiff file_a file_b"
         return 1
     fi
 
-    local left="${1}"
-    local right="${2}"
-
-    if [ -d "${left}" ] && [ -d "${right}" ]; then
-        vim +"DirDiff ${left} ${right}"
-    else
-        vim -d "${left}" "${right}"
-    fi
-}
-
-dtags () {
-    local image="${1}"
-
-    wget -q https://registry.hub.docker.com/v1/repositories/"${image}"/tags -O - \
-        | tr -d '[]" ' | tr '}' '\n' | awk -F: '{print $3}'
+    vim -d "${1}" "${2}"
 }
 
 pw () {
@@ -44,24 +27,6 @@ pw () {
 
 weather () {
     curl https://wttr.in/"${1}"
-}
-
-timer() {
-    seconds=$1;
-    if [ $seconds -eq 0 ]; then
-        echo -ne "" > /mnt/c/Program\ Files/Snaz/TextFiles/ChronoDown.txt;
-    else
-        date1=$((`date +%s` + $seconds));
-        while [ "$date1" -ge `date +%s` ]; do
-            output="$(date -u --date @$(($date1 - `date +%s` )) +'%M:%S')\r";
-            echo -ne " $output \r";
-            echo -ne " $output \r" > /mnt/c/Program\ Files/Snaz/TextFiles/ChronoDown.txt;
-            sleep 0.1
-        done
-        if [[ "$output" =~ "59:59" ]]; then
-            echo -ne " 00:00 " > /mnt/c/Program\ Files/Snaz/TextFiles/ChronoDown.txt;
-        fi
-    fi
 }
 
 alias diff="diff --color -u"

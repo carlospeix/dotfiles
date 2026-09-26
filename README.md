@@ -16,7 +16,7 @@ Basic tools
 
 ```sh
 sudo apt-get update -y
-sudo apt-get install -y curl git gpg gnupg htop rsync zip unzip vim
+sudo apt-get install -y curl git gpg gnupg htop rsync zip unzip vim pwgen xclip
 sudo ca-certificates build-essential libssl-dev libreadline-dev zlib1g-dev
 ```
 

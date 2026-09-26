@@ -50,8 +50,6 @@ if grep -q "microsoft" /proc/version &>/dev/null; then
   export DISPLAY="$(/sbin/ip route | awk '/default/ { print $3 }'):0"
 fi
 
-for i in /etc/update-motd.d/*; do if [ "$i" != "/etc/update-motd.d/98-fsck-at-reboot" ]; then $i; fi; done
-
 alias fd=fdfind
 alias update-os=~/update-os
 
