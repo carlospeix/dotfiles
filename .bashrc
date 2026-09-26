@@ -30,7 +30,7 @@ shopt -s checkwinsize
 
 # Determine git branch.
 parse_git_branch() {
-    git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
+  git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
 }
 
 # Set a non-distracting prompt.
@@ -38,11 +38,10 @@ PS1='\[\]\u@\h\[\]:\[\]\w\[\] \[\]$(parse_git_branch)\[\]\n\$ '
 
 # If it's an xterm compatible terminal, set the title to user@host: dir.
 case "${TERM}" in
-xterm*|rxvt*)
-    PS1="\[\e]0;\u@\h: \w\a\]${PS1}"
-    ;;
-*)
-    ;;
+xterm* | rxvt*)
+  PS1="\[\e]0;\u@\h: \w\a\]${PS1}"
+  ;;
+*) ;;
 esac
 
 # Enable a better reverse search experience.
@@ -54,25 +53,25 @@ esac
 
 # WSL 2 specific settings.
 if grep -q "microsoft" /proc/version &>/dev/null; then
-    # Requires: https://sourceforge.net/projects/vcxsrv/ (or alternative)
-    export DISPLAY="$(/sbin/ip route | awk '/default/ { print $3 }'):0"
+  # Requires: https://sourceforge.net/projects/vcxsrv/ (or alternative)
+  export DISPLAY="$(/sbin/ip route | awk '/default/ { print $3 }'):0"
 fi
 
 # WSL 1 specific settings.
 if grep -qE "(Microsoft|WSL)" /proc/version &>/dev/null; then
-    if [ "$(umask)" = "0000" ]; then
-        umask 0022
-    fi
+  if [ "$(umask)" = "0000" ]; then
+    umask 0022
+  fi
 
-    # Requires: https://sourceforge.net/projects/vcxsrv/ (or alternative)
-    export DISPLAY=:0
+  # Requires: https://sourceforge.net/projects/vcxsrv/ (or alternative)
+  export DISPLAY=:0
 fi
 
 #. $HOME/.asdf/asdf.sh
 
 #[ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
-service cron status > /dev/null || sudo service cron start
+service cron status >/dev/null || sudo service cron start
 # service docker status > /dev/null || sudo service docker start
 
 for i in /etc/update-motd.d/*; do if [ "$i" != "/etc/update-motd.d/98-fsck-at-reboot" ]; then $i; fi; done
@@ -81,30 +80,28 @@ alias fd=fdfind
 alias update-os=~/dotfiles/.local/bin/update-os
 
 export PATH=~/.npm-global/bin:$PATH
+export PATH="$(ruby -e 'puts Gem.user_dir')/bin:$PATH"
 
-# Check if agent is running and socket file exists
-if [ -z "$SSH_AUTH_SOCK" ] || [ ! -S "$SSH_AUTH_SOCK" ]; then
-  # Try to find existing agent
-  if [ -f ~/.ssh-agent-env ]; then
-    source ~/.ssh-agent-env > /dev/null
-  fi
+# Fixed SSH agent socket path (avoids stale socket issues with devcontainers)
+export SSH_AUTH_SOCK="$HOME/.ssh/agent.sock"
 
-  # Test if agent is actually responsive
-  if ! ssh-add -l > /dev/null 2>&1; then
-    # Start new agent and save environment
-    eval "$(ssh-agent -s)"
-    echo "export SSH_AUTH_SOCK=$SSH_AUTH_SOCK" > ~/.ssh-agent-env
-    echo "export SSH_AGENT_PID=$SSH_AGENT_PID" >> ~/.ssh-agent-env
-    echo "SSH agent started."
-  else
-    echo "SSH agent already running."
-  fi
+if [ -f ~/.ssh-agent-env ]; then
+  source ~/.ssh-agent-env >/dev/null
+fi
+
+if ! ssh-add -l >/dev/null 2>&1; then
+  # Kill stale socket if exists
+  rm -f "$SSH_AUTH_SOCK"
+  eval "$(ssh-agent -a "$SSH_AUTH_SOCK" -s)"
+  echo "export SSH_AGENT_PID=$SSH_AGENT_PID" >~/.ssh-agent-env
+  echo "SSH agent started."
 else
   echo "SSH agent already running."
 fi
 ssh-add ~/.ssh/hetzner_id_ed25519
+ssh-add ~/.ssh/github_signing_wsl
 
 if [ -f ~/.bashrc_private ]; then
-    source ~/.bashrc_private
+  source ~/.bashrc_private
 fi
 

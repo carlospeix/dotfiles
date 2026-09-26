@@ -16,7 +16,8 @@ Basic tools
 
 ```sh
 sudo apt-get update -y
-sudo apt-get install -y curl git gpg htop rsync zip unzip rar unrar build-essential libssl-dev libreadline-dev zlib1g-dev
+sudo apt-get install -y curl git gpg gnupg htop rsync zip unzip vim
+sudo ca-certificates build-essential libssl-dev libreadline-dev zlib1g-dev
 ```
 
 #### [GitHub cli](https://github.com/cli/cli/blob/trunk/docs/install_linux.md)
@@ -25,29 +26,6 @@ sudo apt-get install -y curl git gpg htop rsync zip unzip rar unrar build-essent
 sudo apt install gh -y
 gh auth login
 gh auth setup-git
-```
-
-#### [Heroku cli](https://devcenter.heroku.com/articles/heroku-cli)
-```sh
-curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
-```
-
-#### [Docker engine](https://docs.docker.com/engine/install/ubuntu/)Add commentMore actions
-```sh
-sudo apt-get update
-sudo apt-get install  ca-certificates curl gnupg
-
-sudo install -m 0755 -d /etc/apt/keyrings
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-sudo chmod a+r /etc/apt/keyrings/docker.gpg
-
-echo \
-  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
-  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-
-sudo apt-get update
-sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 ```
 
 #### Install these dotfiles and various tools on your system
@@ -64,16 +42,11 @@ cp ~/dotfiles/c/Users/Carlos/.wslconfig /mnt/c/Users/carlos/.wslconfig
 # then adjust the ln -s symlink source (left side) to where you cloned it.
 #
 # NOTE: The last one is WSL 1 / 2 specific. Don't do it on native Linux / MacOS.
-mkdir -p ~/.local/bin && mkdir -p ~/.vim/spell && mkdir ~/.vim/colors \
-  && ln -s ~/dotfiles/.aliases ~/.aliases \
+ln -s ~/dotfiles/.aliases ~/.aliases \
   && ln -s ~/dotfiles/.bashrc ~/.bashrc \
   && ln -s ~/dotfiles/.gitconfig ~/.gitconfig \
   && ln -s ~/dotfiles/.profile ~/.profile \
-  && ln -s ~/dotfiles/.vimrc ~/.vimrc \
-  && ln -s ~/dotfiles/.vim/spell/en.utf-8.add ~/.vim/spell/en.utf-8.add \
-  && ln -s ~/dotfiles/.vim/colors/default-light.vim ~/.vim/colors/default-light.vim \
-  && ln -s ~/dotfiles/.local/bin/update-os ~/.local/bin/update-os \
-  && sudo ln -s ~/dotfiles/etc/wsl.conf /etc/wsl.conf
+  && ln -s ~/dotfiles/update-os ~/update-os
 
 #### Optionally confirm that a few things work after closing and re-opening your terminal
 

@@ -1,6 +1,7 @@
 [user]
 	name = Carlos Peix
 	email = carlos.peix@gmail.com
+	signingkey = key::ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEgUIrk+TzXu2zGPo6nWzdB/sUuos3i0UO96358gYx9J carlos.peix@gmail.com
 
 [core]
 	editor = vim
@@ -17,3 +18,11 @@
 [credential "https://gist.github.com"]
 	helper = 
 	helper = !/usr/bin/gh auth git-credential
+[gpg]
+	format = ssh
+[commit]
+	gpgsign = true
+[tag]
+	gpgsign = true
+[gpg "ssh"]
+	allowedSignersFile = /home/carlos/.ssh/allowed_signers
