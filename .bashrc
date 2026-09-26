@@ -44,15 +44,6 @@ xterm* | rxvt*)
 *) ;;
 esac
 
-# WSL 2 specific settings.
-if grep -q "microsoft" /proc/version &>/dev/null; then
-  # Requires: https://sourceforge.net/projects/vcxsrv/ (or alternative)
-  export DISPLAY="$(/sbin/ip route | awk '/default/ { print $3 }'):0"
-fi
-
-alias fd=fdfind
-alias update-os=~/update-os
-
 export PATH=~/.npm-global/bin:$PATH
 export PATH="$(ruby -e 'puts Gem.user_dir')/bin:$PATH"
 
@@ -72,8 +63,10 @@ if ! ssh-add -l >/dev/null 2>&1; then
 else
   echo "SSH agent already running."
 fi
-ssh-add ~/.ssh/hetzner_id_ed25519
-ssh-add ~/.ssh/github_signing_wsl
+for key in ~/.ssh/hetzner_id_ed25519 ~/.ssh/github_signing_wsl; do
+  fp="$(ssh-keygen -lf "$key" | awk '{print $2}')"
+  ssh-add -l | grep -q "$fp" || ssh-add "$key"
+done
 
 if [ -f ~/.bashrc_private ]; then
   source ~/.bashrc_private
