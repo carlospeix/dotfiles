@@ -44,40 +44,16 @@ xterm* | rxvt*)
 *) ;;
 esac
 
-# Enable a better reverse search experience.
-#   Requires: https://github.com/junegunn/fzf (to use fzf in general)
-#   Requires: https://github.com/BurntSushi/ripgrep (for using rg below)
-#export FZF_DEFAULT_COMMAND="rg --files --hidden --follow --glob '!.git'"
-#export FZF_DEFAULT_OPTS="-m --height 50% --border --color=dark"
-#[ -f "${HOME}/.fzf.bash" ] && source "${HOME}/.fzf.bash"
-
 # WSL 2 specific settings.
 if grep -q "microsoft" /proc/version &>/dev/null; then
   # Requires: https://sourceforge.net/projects/vcxsrv/ (or alternative)
   export DISPLAY="$(/sbin/ip route | awk '/default/ { print $3 }'):0"
 fi
 
-# WSL 1 specific settings.
-if grep -qE "(Microsoft|WSL)" /proc/version &>/dev/null; then
-  if [ "$(umask)" = "0000" ]; then
-    umask 0022
-  fi
-
-  # Requires: https://sourceforge.net/projects/vcxsrv/ (or alternative)
-  export DISPLAY=:0
-fi
-
-#. $HOME/.asdf/asdf.sh
-
-#[ -f ~/.fzf.bash ] && source ~/.fzf.bash
-
-service cron status >/dev/null || sudo service cron start
-# service docker status > /dev/null || sudo service docker start
-
 for i in /etc/update-motd.d/*; do if [ "$i" != "/etc/update-motd.d/98-fsck-at-reboot" ]; then $i; fi; done
 
 alias fd=fdfind
-alias update-os=~/dotfiles/.local/bin/update-os
+alias update-os=~/update-os
 
 export PATH=~/.npm-global/bin:$PATH
 export PATH="$(ruby -e 'puts Gem.user_dir')/bin:$PATH"
@@ -104,4 +80,3 @@ ssh-add ~/.ssh/github_signing_wsl
 if [ -f ~/.bashrc_private ]; then
   source ~/.bashrc_private
 fi
-
