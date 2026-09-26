@@ -29,6 +29,14 @@ weather () {
     curl https://wttr.in/"${1}"
 }
 
+usage() {
+  du -h --max-depth=1 "${1:-.}" | sort -rh
+}
+
+usage-big() {
+  du -ah "${1:-.}" | sort -rh | head -n "${2:-30}"
+}
+
 alias diff="diff --color -u"
 alias fd=fdfind
 alias update-os='sudo -- sh -c "apt-get update; apt-get upgrade -y; apt-get dist-upgrade -y; apt-get autoremove -y; apt-get autoclean -y"'
