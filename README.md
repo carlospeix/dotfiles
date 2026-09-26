@@ -46,6 +46,7 @@ ln -s ~/dotfiles/.aliases ~/.aliases \
   && ln -s ~/dotfiles/.bashrc ~/.bashrc \
   && ln -s ~/dotfiles/.gitconfig ~/.gitconfig \
   && ln -s ~/dotfiles/.profile ~/.profile \
+  && ln -s ~/dotfiles/.vimrc ~/.vimrc \
   && ln -s ~/dotfiles/update-os ~/update-os
 
 #### Optionally confirm that a few things work after closing and re-opening your terminal
