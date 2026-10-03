@@ -50,6 +50,9 @@ export PATH="$(ruby -e 'puts Gem.user_dir')/bin:$PATH"
 # Fixed SSH agent socket path (avoids stale socket issues with devcontainers)
 export SSH_AUTH_SOCK="$HOME/.ssh/agent.sock"
 
+export DOTNET_ROOT="$HOME/.dotnet"
+export PATH="$DOTNET_ROOT:$DOTNET_ROOT/tools:$PATH"
+
 if [ -f ~/.ssh-agent-env ]; then
   source ~/.ssh-agent-env >/dev/null
 fi

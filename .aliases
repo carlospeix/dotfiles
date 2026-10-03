@@ -37,6 +37,18 @@ usage-big() {
   du -ah "${1:-.}" | sort -rh | head -n "${2:-30}"
 }
 
+mkcd() {
+  # Guard: Check if the argument is empty
+  if [ -z "$1" ]; then
+    echo "Error: Please specify a directory name."
+    echo "Usage: mkcd <directory_name>"
+    return 1
+  fi
+
+  # Create and enter the directory
+  mkdir -p "$1" && cd "$1"
+}
+
 alias diff="diff --color -u"
 alias fd=fdfind
 alias update-os='sudo -- sh -c "apt-get update; apt-get upgrade -y; apt-get dist-upgrade -y; apt-get autoremove -y; apt-get autoclean -y"'

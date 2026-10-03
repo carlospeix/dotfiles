@@ -26,3 +26,5 @@
 	gpgsign = true
 [gpg "ssh"]
 	allowedSignersFile = /home/carlos/.ssh/allowed_signers
+[init]
+	defaultBranch = main
