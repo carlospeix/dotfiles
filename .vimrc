@@ -9,7 +9,7 @@ set clipboard=unnamedplus
 
 filetype off     " required
 
-colorscheme default-light
+colorscheme default
 set background=dark
 
 set number relativenumber
