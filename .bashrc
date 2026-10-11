@@ -44,14 +44,16 @@ xterm* | rxvt*)
 *) ;;
 esac
 
+export DOTNET_ROOT="$HOME/.dotnet"
+
 export PATH=~/.npm-global/bin:$PATH
 export PATH="$(ruby -e 'puts Gem.user_dir')/bin:$PATH"
+export PATH="$DOTNET_ROOT:$DOTNET_ROOT/tools:$PATH"
 
 # Fixed SSH agent socket path (avoids stale socket issues with devcontainers)
 export SSH_AUTH_SOCK="$HOME/.ssh/agent.sock"
 
-export DOTNET_ROOT="$HOME/.dotnet"
-export PATH="$DOTNET_ROOT:$DOTNET_ROOT/tools:$PATH"
+export LC_COLLATE="C.UTF-8"
 
 if [ -f ~/.ssh-agent-env ]; then
   source ~/.ssh-agent-env >/dev/null
