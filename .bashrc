@@ -55,23 +55,25 @@ export SSH_AUTH_SOCK="$HOME/.ssh/agent.sock"
 
 export LC_COLLATE="C.UTF-8"
 
-if [ -f ~/.ssh-agent-env ]; then
-  source ~/.ssh-agent-env >/dev/null
-fi
+if [[ $- == *i* ]]; then
+  if [ -f ~/.ssh-agent-env ]; then
+    source ~/.ssh-agent-env >/dev/null
+  fi
 
-if ! ssh-add -l >/dev/null 2>&1; then
-  # Kill stale socket if exists
-  rm -f "$SSH_AUTH_SOCK"
-  eval "$(ssh-agent -a "$SSH_AUTH_SOCK" -s)"
-  echo "export SSH_AGENT_PID=$SSH_AGENT_PID" >~/.ssh-agent-env
-  echo "SSH agent started."
-else
-  echo "SSH agent already running."
+  if ! ssh-add -l >/dev/null 2>&1; then
+    # Kill stale socket if exists
+    rm -f "$SSH_AUTH_SOCK"
+    eval "$(ssh-agent -a "$SSH_AUTH_SOCK" -s)"
+    echo "export SSH_AGENT_PID=$SSH_AGENT_PID" >~/.ssh-agent-env
+    echo "SSH agent started."
+  else
+    echo "SSH agent already running."
+  fi
+  for key in ~/.ssh/hetzner_id_ed25519 ~/.ssh/github_signing_wsl; do
+    fp="$(ssh-keygen -lf "$key" | awk '{print $2}')"
+    ssh-add -l | grep -q "$fp" || ssh-add "$key"
+  done
 fi
-for key in ~/.ssh/hetzner_id_ed25519 ~/.ssh/github_signing_wsl; do
-  fp="$(ssh-keygen -lf "$key" | awk '{print $2}')"
-  ssh-add -l | grep -q "$fp" || ssh-add "$key"
-done
 
 if [ -f ~/.bashrc_private ]; then
   source ~/.bashrc_private
