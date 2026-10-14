@@ -1,92 +1,156 @@
 # dotfiles
 
-Based on [Nick Janetakis](https://github.com/nickjj/dotfiles) dotfiles repository
+Basado en los dotfiles de [Nick Janetakis](https://github.com/nickjj/dotfiles).
 
-### Documentation
+Entorno de desarrollo en Windows 11 con WSL2 (Debian), Docker Engine nativo
+(sin Docker Desktop) y DevPod.
 
-This configuration is designed an tested on a Windows 11 Pro host running WSL2 for development purpose.
+## Requisitos
 
-#### On the windows host
+- Windows 11 con WSL2.
+- Debian en WSL2. Los scripts de `docker/` usan el repositorio de Docker para Debian.
 
-On the windows host you should install WSL 2, then install Debian in WSL 2 (Docker se instala nativo, ver abajo)
+## Instalación en WSL
 
-#### Ubuntu 22.04 LTS
-
-Basic tools
-
-```sh
-sudo apt-get update -y
-sudo apt-get install -y curl git gpg gnupg htop rsync zip unzip vim pwgen xclip
-sudo ca-certificates build-essential libssl-dev libreadline-dev zlib1g-dev
-```
-
-#### [GitHub cli](https://github.com/cli/cli/blob/trunk/docs/install_linux.md)
+### 1. Paquetes base
 
 ```sh
-sudo apt install gh -y
+sudo apt-get update
+sudo apt-get install -y \
+  ca-certificates curl wget git git-lfs gh gpg gnupg \
+  build-essential vim htop rsync zip unzip jq fzf ripgrep fd-find \
+  pwgen xclip
 gh auth login
-gh auth setup-git
 ```
 
-#### Install these dotfiles and various tools on your system
+Opcionales según el proyecto:
+
+- Ruby: `ruby-full ruby-dev`
+- Python: `python3 python3-dev python3-pip python3-venv`
+- Node.js: desde [NodeSource](https://github.com/nodesource/distributions)
+- .NET: SDK en `~/.dotnet` (`DOTNET_ROOT` ya está en `.bashrc`)
+
+### 2. Clonar el repo
 
 ```sh
-# Clone down this dotfiles repo to your home directory. Feel free to place
-# this anywhere you want, but remember where you've cloned things to.
 git clone https://github.com/carlospeix/dotfiles ~/dotfiles
-
-# Copy WSL configuration
-cp ~/dotfiles/c/Users/Carlos/.wslconfig /mnt/c/Users/carlos/.wslconfig 
-
-# Create symlinks to various dotfiles. If you didn't clone it to ~/dotfiles
-# then adjust the ln -s symlink source (left side) to where you cloned it.
-#
-# NOTE: The last one is WSL 1 / 2 specific. Don't do it on native Linux / MacOS.
-ln -s ~/dotfiles/.aliases ~/.aliases \
-  && ln -s ~/dotfiles/.bashrc ~/.bashrc \
-  && ln -s ~/dotfiles/.gitconfig ~/.gitconfig \
-  && ln -s ~/dotfiles/.profile ~/.profile \
-  && ln -s ~/dotfiles/.vimrc ~/.vimrc
-
-#### Optionally confirm that a few things work after closing and re-opening your terminal
-
-```sh
-# Check to make sure git is configured with your name, email and custom settings.
-git config --list
 ```
 
-Before you start customizing certain config files, take a look at the
-[personalization question in the FAQ](#how-to-personalize-these-dotfiles).
+### 3. Configuración de WSL
 
-### Extra WSL 1 and WSL 2 steps
+Activa systemd y el usuario por defecto (`/etc/wsl.conf`):
 
-In addition to the Linux side of things, there's a few config files that I have
-in various directories of this dotfiles repo. These have long Windows paths.
+```sh
+~/dotfiles/wsl/apply.sh
+```
 
-It would be expected that you copy those over to your system while replacing
-"Carlos" with your Windows user name if you want to use those things, such as my
-Microsoft Terminal `settings.json` file and others. Some of the paths may
-also contain unique IDs too, so adjust them as needed on your end.
+Copiar `.wslconfig` a Windows (revisar antes los valores, por ejemplo la memoria):
 
-Some of these configs expect that you have certain programs or tools installed
-on Windows. The [tools I use blog post](https://nickjanetakis.com/blog/the-tools-i-use) has a complete list of
-those tools so you can pick the ones you want to install.
+```sh
+cp ~/dotfiles/c/Users/Carlos/.wslconfig /mnt/c/Users/carlos/.wslconfig
+```
 
-Pay very close attention to the `c/Users/carlos/.wslconfig` file because it has
-values in there that you will very likely want to change before using it.
-[This commit message](https://github.com/nickjj/dotfiles/commit/d0f1fc2622204b809cf7fcbb1a82d45b451064c4)
-goes into the details.
+Reiniciar WSL desde Windows con `wsl --shutdown`.
 
-Also, you should reboot to activate your `/etc/wsl.conf` file (symlinked
-earlier). That will be necessary if you want to access your mounted drives at
-`/c` or `/d` instead of `/mnt/c` or `/mnt/d`.
+### 4. Docker Engine
 
-## Docker (nativo en Debian)
+```sh
+~/dotfiles/docker/install-docker-debian.sh
+sudo usermod -aG docker "$USER"   # requiere cerrar y abrir sesión
+```
 
-Docker Engine se corre nativo en Debian (con systemd), no Docker Desktop. Ver:
+- `docker/local-network.sh`: red externa compartida.
+- `docker/pg-restore.sh`: restaura dumps de Postgres en volúmenes nombrados.
+- `docs/docker-migration.md`: procedimiento completo de migración.
 
-- `docker/install-docker-debian.sh` — instala docker-ce + compose + buildx.
-- `wsl/wsl.conf` + `wsl/apply.sh` — activa systemd.
-- `docker/local-network.sh` — red externa compartida.
-- `docker/pg-restore.sh` — restaura dumps de Postgres en volúmenes nombrados.
-- `docs/docker-migration.md` — procedimiento completo (dump/restore de crm y fugazzeta, auth).
+### 5. Dotfiles
+
+```sh
+~/dotfiles/wsl/install.sh
+```
+
+Crea symlinks a los dotfiles del repo y a configs compartidas con Windows
+(`CLAUDE.md`, opencode). Es idempotente: si un destino existe, lo respalda
+como `<archivo>.bak.<fecha>`.
+
+Los secretos van en `~/.bashrc_private` (no versionado, permisos 600).
+
+Firma de commits: `~/.ssh/allowed_signers` se mantiene a mano, con una línea
+por clave pública de firma (WSL y Windows):
+
+```
+carlos.peix@gmail.com namespaces="git" ssh-ed25519 AAAA...
+```
+
+### 6. Herramientas globales
+
+npm (instala en `~/.npm-global`, configurado en `.npmrc`):
+
+```sh
+npm install -g @anthropic-ai/claude-code opencode-ai @fission-ai/openspec \
+  @devcontainers/cli ccstatusline
+```
+
+`herdr`: binario en `~/.local/bin`.
+
+`wsl/fix-interop.sh`: restaura la interop con Windows si falla la ejecución
+de `.exe` ("Exec format error").
+
+## DevPod
+
+Provider SSH desde Windows hacia este Debian.
+
+### En WSL
+
+```sh
+~/dotfiles/wsl/apply-sshd.sh   # sshd en 127.0.0.1:2222, solo clave
+```
+
+La clave pública de Windows tiene que estar en `~/.ssh/authorized_keys`.
+
+### En Windows
+
+- Git for Windows: VS Code usa su `ssh.exe`, porque el OpenSSH de Windows se
+  cuelga con el `ProxyCommand` de DevPod.
+- DevPod: `winget install Skvetter.DevPod` (agregar `C:\Program Files\DevPod`
+  al PATH si no está).
+- `~/.ssh/config` (`127.0.0.1` y no `localhost`, para evitar la demora por IPv6):
+
+  ```
+  Host wsl-debian
+    HostName 127.0.0.1
+    User carlos
+    Port 2222
+    IdentityFile ~/.ssh/id_ed25519_wsl
+    IdentitiesOnly yes
+  ```
+
+- VS Code (`settings.json`):
+
+  ```json
+  "remote.SSH.path": "C:\Program Files\Git\usr\bin\ssh.exe"
+  ```
+
+- Provider y dotfiles:
+
+  ```powershell
+  devpod provider add ssh --name wsl -o HOST=wsl-debian -o PORT=2222
+  devpod context set-options -o DOTFILES_URL=https://github.com/carlospeix/dotfiles -o DOTFILES_SCRIPT=devpod/install.sh
+  ```
+
+`devpod/install.sh` corre dentro de cada container: aliases, vim, config
+portable de git, firma automática y el workaround del bug de `/root`.
+
+Uso:
+
+```powershell
+devpod up <repo-o-carpeta> --ide vscode
+devpod list
+devpod stop <nombre>
+devpod delete <nombre>
+```
+
+## Windows Terminal
+
+`c/Users/Carlos/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json`:
+copiar a mano a la misma ruta en Windows.
