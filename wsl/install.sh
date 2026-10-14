@@ -25,6 +25,11 @@ for f in .aliases .bashrc .gitconfig .profile .vimrc .npmrc .config/git/ignore; 
   link "$dotfiles/$f" "$HOME/$f"
 done
 
+# Scripts
+for f in dcx; do
+  link "$dotfiles/bin/$f" "$HOME/.local/bin/$f"
+done
+
 # Configs compartidas con Windows
 link "$winhome/.claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
 link "$winhome/.config/opencode/opencode.jsonc" "$HOME/.config/opencode/opencode.jsonc"

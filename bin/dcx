@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+# dcx: ejecuta un comando en el devcontainer del proyecto actual.
+#   dcx <cmd> [args]   ejecuta en el container (debe estar corriendo)
+#   dcx --start        arranca el container existente (detenido al cerrar el IDE)
+#   dcx --stop         detiene el container
+# Busca por label devcontainer.config_file (ruta Linux), que coincide aunque
+# VS Code use executeInWSL (local_folder UNC). Nunca crea containers.
+set -euo pipefail
+root=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
+cfg="$root/.devcontainer/devcontainer.json"
+[ -f "$cfg" ] || { echo "dcx: no hay $cfg" >&2; exit 2; }
+filter="label=devcontainer.config_file=$cfg"
+
+# container_id [-a]: id del único container (con -a incluye detenidos)
+container_id() {
+  local id
+  id=$(docker ps -q ${1:-} --filter "$filter")
+  [ "$(wc -w <<<"$id")" -le 1 ] || { echo "dcx: más de un container:" $id >&2; exit 4; }
+  echo "$id"
+}
+
+case "${1:-}" in
+  --start)
+    id=$(container_id -a)
+    [ -n "$id" ] || { echo "dcx: no hay container creado (abrilo desde el IDE)" >&2; exit 3; }
+    docker start "$id" >/dev/null && echo "dcx: container $id corriendo"
+    exit ;;
+  --stop)
+    id=$(container_id)
+    [ -n "$id" ] || { echo "dcx: container ya detenido"; exit 0; }
+    docker stop "$id" >/dev/null && echo "dcx: container $id detenido"
+    exit ;;
+esac
+
+id=$(container_id)
+[ -n "$id" ] || { echo "dcx: devcontainer detenido (dcx --start o abrir el IDE)" >&2; exit 3; }
+exec devcontainer exec --container-id "$id" --workspace-folder "$root" "$@"

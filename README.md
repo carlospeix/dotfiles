@@ -96,6 +96,61 @@ npm install -g @anthropic-ai/claude-code opencode-ai @fission-ai/openspec \
 `wsl/fix-interop.sh`: restaura la interop con Windows si falla la ejecución
 de `.exe` ("Exec format error").
 
+## Dev Containers + Claude Code en WSL
+
+El IDE (VS Code Dev Containers, `dev.containers.executeInWSL: true`) trabaja
+dentro del container. Claude Code corre en WSL, edita el repo directamente y
+ejecuta comandos en ese mismo container con `dcx`.
+
+### `dcx` (`bin/dcx`, link en `~/.local/bin`)
+
+```sh
+dcx bin/rails test     # ejecuta en el container del repo actual, como remoteUser
+dcx --start            # arranca el container existente (VS Code lo detiene al cerrar)
+dcx --stop             # detiene el container
+```
+
+- Encuentra el container por el label `devcontainer.config_file`. Con
+  `executeInWSL`, VS Code pone `devcontainer.local_folder` como ruta UNC
+  (`\wsl.localhost\...`). Por eso `devcontainer exec/up --workspace-folder`
+  desde WSL **no** lo encuentra, y `up` crearía un segundo container.
+- Usa `devcontainer exec --container-id`, que respeta `remoteUser`,
+  `containerEnv` y el entorno de login (PATH de nvm, gems). El cwd es el
+  `workspaceFolder`. Propaga el exit code y stdin.
+- Nunca crea containers. Exit codes: 2 = no hay devcontainer.json,
+  3 = container detenido o inexistente, 4 = hay más de uno.
+
+Claude: la regla está en `~/.claude/CLAUDE.md` (compartido con Windows) y el
+permiso `Bash(dcx:*)` en `~/.claude/settings.json`. Git siempre corre en WSL.
+
+### Firma de commits
+
+- Desde WSL (Claude): git + agente de WSL (`~/.ssh/agent.sock`).
+- Desde VS Code (terminal o UI dentro del container): VS Code reenvía el
+  agente de WSL (`/tmp/vscode-ssh-auth-*.sock`) y monta `~/.gitconfig`
+  readonly. En sesiones `dcx` no hay agente, así que no firman.
+
+### Puerto 3000 sin IDE
+
+En `devcontainer.json`:
+
+```jsonc
+"containerEnv": { "BINDING": "0.0.0.0" },     // Rails escucha fuera de loopback del container
+"appPort": ["127.0.0.1:3000:3000"]            // Docker publica solo en loopback del host
+```
+
+`localhost:3000` funciona desde Windows (localhost forwarding de WSL) con o
+sin IDE. No usar `forwardPorts` junto con esto: VS Code se iría al 3001. En un
+VPS, el `127.0.0.1:` es lo que evita exponer el puerto (Docker saltea ufw);
+se accede con `ssh -L 3000:localhost:3000`.
+
+### Zed
+
+No sirve para esto: los Dev Containers de Zed solo funcionan con proyectos
+locales, y un proyecto WSL abierto desde Zed para Windows es remoto ("Cannot
+open Dev Container from remote project"). La alternativa sería Zed Linux en
+WSL vía WSLg (no probada).
+
 ## DevPod
 
 Provider SSH desde Windows hacia este Debian.
