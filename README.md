@@ -151,47 +151,60 @@ locales, y un proyecto WSL abierto desde Zed para Windows es remoto ("Cannot
 open Dev Container from remote project"). La alternativa sería Zed Linux en
 WSL vía WSLg (no probada).
 
-## DevPod
+## SSH desde Windows a WSL
 
-Provider SSH desde Windows hacia este Debian.
+Para herdr (Windows → Debian).
 
 ### En WSL
 
 ```sh
-~/dotfiles/wsl/apply-sshd.sh   # sshd en 127.0.0.1:2222, solo clave
+~/dotfiles/wsl/apply-sshd.sh   # sshd en 127.0.0.1:22, solo clave
 ```
 
 La clave pública de Windows tiene que estar en `~/.ssh/authorized_keys`.
 
+Todas las distros WSL2 comparten la red: un solo sshd puede usar el 22. En
+Ubuntu está deshabilitado (`systemctl disable --now ssh.socket ssh`).
+
 ### En Windows
+
+`~/.ssh/config` (`127.0.0.1` y no `localhost`, para evitar la demora por IPv6):
+
+```
+Host wsl-debian
+  HostName 127.0.0.1
+  User carlos
+  Port 22
+  IdentityFile ~/.ssh/id_ed25519_wsl
+  IdentitiesOnly yes
+```
+
+Si cambia el sshd que atiende `127.0.0.1:22`: `ssh-keygen -R 127.0.0.1`.
+
+## DevPod (para VPS, futuro)
+
+Descartado para uso local: no aporta sobre Dev Containers + `dcx`.
+
+En Windows:
 
 - Git for Windows: VS Code usa su `ssh.exe`, porque el OpenSSH de Windows se
   cuelga con el `ProxyCommand` de DevPod.
 - DevPod: `winget install Skvetter.DevPod` (agregar `C:\Program Files\DevPod`
   al PATH si no está).
-- `~/.ssh/config` (`127.0.0.1` y no `localhost`, para evitar la demora por IPv6):
-
-  ```
-  Host wsl-debian
-    HostName 127.0.0.1
-    User carlos
-    Port 2222
-    IdentityFile ~/.ssh/id_ed25519_wsl
-    IdentitiesOnly yes
-  ```
-
 - VS Code (`settings.json`):
 
   ```json
   "remote.SSH.path": "C:\Program Files\Git\usr\bin\ssh.exe"
   ```
 
-- Provider y dotfiles:
+- Provider (un `Host` en `~/.ssh/config`) y dotfiles:
 
   ```powershell
-  devpod provider add ssh --name wsl -o HOST=wsl-debian -o PORT=2222
+  devpod provider add ssh --name <vps> -o HOST=<host-ssh>
   devpod context set-options -o DOTFILES_URL=https://github.com/carlospeix/dotfiles -o DOTFILES_SCRIPT=devpod/install.sh
   ```
+
+  Las opciones de dotfiles ya están configuradas en el contexto `default`.
 
 `devpod/install.sh` corre dentro de cada container: aliases, vim, config
 portable de git, firma automática y el workaround del bug de `/root`.
