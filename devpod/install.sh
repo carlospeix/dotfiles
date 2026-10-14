@@ -21,7 +21,7 @@ git config --global tag.gpgsign true
 if command -v vim >/dev/null; then git config --global core.editor vim; fi
 
 # Workaround bug DevPod: configura git con `su <user> -c` desde /root (700)
-# y git falla con "error reading '/root/.git'". Ver: <link al issue>
+# y git falla con "error reading '/root/.git'". Ver: https://github.com/skevetter/devpod/issues/783
 sudo -n chmod o+x /root 2>/dev/null || echo "Aviso: no se pudo chmod /root (sin sudo)"
 
 echo "dotfiles DevPod instalados."
