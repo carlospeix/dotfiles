@@ -91,7 +91,7 @@ npm install -g @anthropic-ai/claude-code opencode-ai @fission-ai/openspec \
   @devcontainers/cli ccstatusline
 ```
 
-`herdr`: binario en `~/.local/bin`.
+`herdr`: binario en `~/.local/bin` (ver "herdr: Windows y Debian en una ventana").
 
 `wsl/fix-interop.sh`: restaura la interop con Windows si falla la ejecución
 de `.exe` ("Exec format error").
@@ -180,6 +180,27 @@ Host wsl-debian
 ```
 
 Si cambia el sshd que atiende `127.0.0.1:22`: `ssh-keygen -R 127.0.0.1`.
+
+### herdr: Windows y Debian en una ventana
+
+El herdr de Windows es el cliente. El de Debian corre como server remoto,
+guardado como machine (aparece en el sidebar debajo de Local):
+
+```powershell
+herdr machine add wsl-debian --label debian   # una vez; se conecta a la sesión que ya corre
+herdr machine status                          # → debian reachable
+```
+
+- Requisitos: la clave de Windows cargada en el `ssh-agent` de Windows (las
+  conexiones en segundo plano nunca piden contraseña) y las mismas versiones de
+  herdr en los dos lados (`herdr update --handoff` en Debian, `herdr update` en Windows).
+- El bridge usa el stdout de `ssh` como protocolo: el `.bashrc` no debe imprimir
+  nada en sesiones no interactivas (por eso el setup del agente va dentro de
+  `[[ $- == *i* ]]`). Por eso fallaba antes ("connection was lost").
+- `~/.local/bin` está en el PATH desde `.bashrc` (no `.profile`) para que
+  `herdr` y `dcx` se encuentren por SSH no interactivo.
+- Sin `ForwardAgent`: los panes de Debian usan el agente de WSL
+  (`SSH_AUTH_SOCK=~/.ssh/agent.sock`) y firman con la clave de WSL.
 
 ## DevPod (para VPS, futuro)
 

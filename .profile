@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 # This file runs once at login.
 
-# Add all local binary paths to the system path.
-export PATH="${PATH}:${HOME}/.local/bin"
-
 # Default programs to run.
 export EDITOR="vim"
 
