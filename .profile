@@ -17,3 +17,6 @@ export LESS_TERMCAP_ue="$(printf '%b' '[0m')"
 # If bash is the login shell, then source ~/.bashrc if it exists.
 echo "${0}" | grep "bash$" >/dev/null \
   && [ -f "${HOME}/.bashrc" ] && source "${HOME}/.bashrc"
+
+# Hermes Agent command
+case ":$PATH:" in *":$HOME/.local/bin:"*) ;; *) export PATH="$HOME/.local/bin:$PATH" ;; esac
