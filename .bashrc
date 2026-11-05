@@ -57,6 +57,10 @@ export SSH_AUTH_SOCK="$HOME/.ssh/agent.sock"
 
 export LC_COLLATE="C.UTF-8"
 
+if [ -f ~/.bashrc_private ]; then
+  source ~/.bashrc_private
+fi
+
 if [[ $- == *i* ]]; then
   if [ -f ~/.ssh-agent-env ]; then
     source ~/.ssh-agent-env >/dev/null
@@ -71,12 +75,8 @@ if [[ $- == *i* ]]; then
   else
     echo "SSH agent already running."
   fi
-  for key in ~/.ssh/hetzner_id_ed25519 ~/.ssh/github_signing_wsl; do
+  for key in "${SSH_AGENT_KEYS[@]}"; do
     fp="$(ssh-keygen -lf "$key" | awk '{print $2}')"
     ssh-add -l | grep -q "$fp" || ssh-add "$key"
   done
-fi
-
-if [ -f ~/.bashrc_private ]; then
-  source ~/.bashrc_private
 fi
