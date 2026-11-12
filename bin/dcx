@@ -3,6 +3,8 @@
 #   dcx <cmd> [args]   ejecuta en el container (debe estar corriendo)
 #   dcx --start        arranca el container existente (detenido al cerrar el IDE)
 #   dcx --stop         detiene el container
+# Con docker compose, --start/--stop actúan sobre todos los servicios del
+# proyecto (db, etc.): el label sólo está en el servicio principal.
 # Busca por label devcontainer.config_file (ruta Linux), que coincide aunque
 # VS Code use executeInWSL (local_folder UNC). Nunca crea containers.
 set -euo pipefail
@@ -19,19 +21,36 @@ container_id() {
   echo "$id"
 }
 
+# siblings <id> [-a]: otros containers del mismo proyecto compose (nombres)
+siblings() {
+  local proj
+  proj=$(docker inspect -f '{{index .Config.Labels "com.docker.compose.project"}}' "$1")
+  [ -n "$proj" ] || return 0
+  docker ps ${2:-} --filter "label=com.docker.compose.project=$proj" --format '{{.ID}} {{.Names}}' |
+    awk -v id="$1" 'index(id, $1) != 1 && index($1, id) != 1 { print $2 }'
+}
+
 case "${1:-}" in
   --start)
     id=$(container_id -a)
     [ -n "$id" ] || { echo "dcx: no hay container creado (abrilo desde el IDE)" >&2; exit 3; }
-    docker start "$id" >/dev/null && echo "dcx: container $id corriendo"
+    sibs=$(siblings "$id" -a)
+    # dependencias primero, después el principal
+    [ -z "$sibs" ] || docker start $sibs >/dev/null
+    docker start "$id" >/dev/null
+    echo "dcx: corriendo" $id $sibs
     exit ;;
   --stop)
-    id=$(container_id)
-    [ -n "$id" ] || { echo "dcx: container ya detenido"; exit 0; }
-    docker stop "$id" >/dev/null && echo "dcx: container $id detenido"
+    id=$(container_id -a)
+    [ -n "$id" ] || { echo "dcx: no hay container"; exit 0; }
+    sibs=$(siblings "$id")
+    docker stop "$id" $sibs >/dev/null && echo "dcx: detenidos" $id $sibs
     exit ;;
 esac
 
 id=$(container_id)
 [ -n "$id" ] || { echo "dcx: devcontainer detenido (dcx --start o abrir el IDE)" >&2; exit 3; }
+all=$(siblings "$id" -a); up=$(siblings "$id")
+down=$(comm -23 <(tr ' ' '\n' <<<"$all" | sort) <(tr ' ' '\n' <<<"$up" | sort) | xargs)
+[ -z "$down" ] || { echo "dcx: servicios detenidos: $down (dcx --start)" >&2; exit 3; }
 exec devcontainer exec --container-id "$id" --workspace-folder "$root" "$@"
