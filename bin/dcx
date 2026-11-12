@@ -43,8 +43,9 @@ case "${1:-}" in
   --stop)
     id=$(container_id -a)
     [ -n "$id" ] || { echo "dcx: no hay container"; exit 0; }
-    sibs=$(siblings "$id")
-    docker stop "$id" $sibs >/dev/null && echo "dcx: detenidos" $id $sibs
+    run=$(docker ps -q --filter "id=$id"; siblings "$id")
+    [ -n "$run" ] || { echo "dcx: ya detenido"; exit 0; }
+    docker stop $run >/dev/null && echo "dcx: detenidos" $run
     exit ;;
 esac
 
